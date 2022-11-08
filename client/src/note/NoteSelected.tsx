@@ -21,14 +21,22 @@ export default function NoteSelected({
   );
 
   const handleNoteType = (value: string, field: string) => {
-    setTitleValue(value);
     if (note) {
       const newNotes = data?.notes.map((n, i) => {
         if (n.id === note?.id) {
-          return {
-            ...data.notes[i],
-            title: value ? value : note.title,
-          };
+          if (field === "title") {
+            setTitleValue(value);
+            return {
+              ...data.notes[i],
+              title: value ? value : note.title,
+            };
+          } else if (field === "content") {
+            setContentValue(value);
+            return {
+              ...data.notes[i],
+              content: value ? value : note.content,
+            };
+          } else return n;
         }
         return n;
       });
@@ -50,12 +58,14 @@ export default function NoteSelected({
     const delayDebounceFn = setTimeout(() => {
       update({
         refetchQueries: [GET_NOTES],
-        variables: { note: { id: note?.id, title: titleValue } },
+        variables: {
+          note: { id: note?.id, title: titleValue, content: contentValue },
+        },
       });
     }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [titleValue]);
+  }, [titleValue, contentValue]);
 
   useEffect(() => {
     setTitleValue(note?.title);

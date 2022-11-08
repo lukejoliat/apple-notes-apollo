@@ -36,10 +36,10 @@ export class NoteDataSource {
   }
 
   async updateNote(note) {
-    const { id, title, author } = note;
+    const { id, title, content } = note;
     const newNote = {};
     if (title) newNote["title"] = title;
-    if (author) newNote["content"] = author;
+    if (content) newNote["content"] = content;
     await this.store.notes.update(newNote, {
       where: {
         id,

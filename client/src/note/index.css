@@ -17,6 +17,7 @@
   }
   
   .note_selected {
+    padding: .5rem;
     text-align: left;
     color: var(--primary, black);
     background: var(--secondary, white);
@@ -31,3 +32,19 @@
     width: 100%;
   }
   
+  .note_title_input {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: black;
+    font-size: 2rem;
+    margin: 1rem 0;
+  }
+
+  .note_content_input {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: black;
+    font-size: 1rem;
+  }
