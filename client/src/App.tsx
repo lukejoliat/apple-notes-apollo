@@ -8,6 +8,7 @@ import NoteList from "./note/NoteList";
 import NoteSelected from "./note/NoteSelected";
 
 function App() {
+  // make this a local field in apollo
   const [noteSelected, setNoteSelected] = useState<string>("");
   const handleNoteClick = (id: string) => setNoteSelected(id);
 
@@ -15,7 +16,7 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <Sidebar>
-          Side-Bar
+          <div>Side-Bar</div>
           <NoteList handleNoteClick={handleNoteClick} />
         </Sidebar>
         <MainPanel>

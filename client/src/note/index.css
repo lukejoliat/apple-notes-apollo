@@ -48,3 +48,7 @@
     color: black;
     font-size: 1rem;
   }
+
+  .create_note_button {
+    margin: 1rem;
+  }

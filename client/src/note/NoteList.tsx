@@ -28,7 +28,9 @@ export default function NoteList({
 
   return (
     <>
-      <button onClick={() => createNote()}>Create Note</button>
+      <button className="create_note_button" onClick={() => createNote()}>
+        Create Note
+      </button>
       <ul className="note_list">
         {data?.notes.map((n, i) => (
           <li key={n.id} onClick={() => handleNoteClick(n.id)}>

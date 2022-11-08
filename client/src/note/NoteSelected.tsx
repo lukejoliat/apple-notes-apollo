@@ -1,5 +1,5 @@
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { GET_NOTES, UPDATE_NOTE, DELETE_NOTE } from "../client";
 import { Note } from "./Note";
 
@@ -51,6 +51,10 @@ export default function NoteSelected({
     deleteNote({
       refetchQueries: [GET_NOTES],
       variables: { id: note?.id },
+    });
+    client.writeQuery({
+      query: GET_NOTES,
+      data: { notes: data?.notes.filter((n) => n.id !== note?.id) },
     });
   };
 

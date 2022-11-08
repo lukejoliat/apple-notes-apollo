@@ -95,7 +95,7 @@
   
   .sidebar {
     height: 100%;
-    max-width: 10rem;
+    max-width: 15rem;
     width: 100%;
     border-radius: 0.5rem;
     border: 2px dashed var(--secondary, white);
