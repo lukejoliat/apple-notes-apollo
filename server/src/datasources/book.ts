@@ -1,24 +1,14 @@
-import { DataSource } from "apollo-datasource";
 import { GraphQLError } from "graphql";
-import { v4 as uuid } from "uuid";
+import types from "sequelize";
 
-export class BookAPI extends DataSource {
-  store: any;
-  context: any;
+export class BookAPI {
+  private store: {
+    db: types.Sequelize;
+    books: types.ModelStatic<types.Model<any, any>>;
+  };
   constructor({ store }) {
-    super();
     this.store = store;
     this.store.db.sync();
-  }
-
-  /**
-   * This is a function that gets called by ApolloServer when being setup.
-   * This function gets called with the datasource config including things
-   * like caches and context. We'll assign this.context to the request context
-   * here, so we can know about the user making requests
-   */
-  initialize(config) {
-    this.context = config.context;
   }
 
   async getBook(id: string) {

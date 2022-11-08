@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
-import Sidebar from "./layout/Sidebar";
-import MainPanel from "./layout/MainPanel";
-import "./App.css";
-import NoteList from "./note/NoteList";
-import NoteSelected from "./note/NoteSelected";
-import { v4 as uuid } from "uuid";
 import {
   ApolloClient,
   ApolloProvider,
   gql,
   InMemoryCache,
 } from "@apollo/client";
+import { useState } from "react";
+import "./App.css";
+import MainPanel from "./layout/MainPanel";
+import Sidebar from "./layout/Sidebar";
+import NoteList from "./note/NoteList";
+import NoteSelected from "./note/NoteSelected";
 
 export interface Note {
   id: string;
@@ -18,28 +17,67 @@ export interface Note {
   content: string;
 }
 
-export const QUERY = gql`
+export const GET_NOTES = gql`
   query getNotes {
-    notes @client
+    notes {
+      id
+      title
+      content
+    }
   }
 `;
 
-const NOTES: Note[] = [
-  { id: uuid(), title: "My Note", content: "This is the body of my note." },
-  {
-    id: uuid(),
-    title: "My Note #2",
-    content: "This is the body of my note #2.",
-  },
-  {
-    id: uuid(),
-    title: "My Note #3",
-    content: "This is the body of my note #3.",
-  },
-];
+export const CREATE_NOTE = gql`
+  mutation CreateNote($note: NoteInput) {
+    note(note: $note) {
+      id
+      title
+      content
+    }
+  }
+`;
 
-const client = new ApolloClient({ cache: new InMemoryCache() });
-client.writeQuery({ query: QUERY, data: { notes: NOTES } });
+export const UPDATE_NOTE = gql`
+  mutation UpdateNote($note: NoteUpdateInput) {
+    updateNote(note: $note) {
+      id
+      title
+      content
+    }
+  }
+`;
+
+export const DELETE_NOTE = gql`
+  mutation DeleteNote($id: String) {
+    deleteNote(id: $id)
+  }
+`;
+
+export const BOOKQUERY = gql`
+  query getBooks {
+    books {
+      title
+    }
+  }
+`;
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  uri: "http://localhost:4000/graphql",
+  typeDefs: `
+    input NoteInput {
+        id: String!
+        title: String!
+        content: String!
+    }
+
+    input NoteUpdateInput {
+        id: String!
+        title: String
+        content: String
+      }
+  `,
+});
 
 function App() {
   const [noteSelected, setNoteSelected] = useState<string>("");

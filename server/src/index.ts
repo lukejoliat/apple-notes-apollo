@@ -2,6 +2,14 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import types, { Sequelize } from "sequelize";
 import BookAPI from "./datasources/book.js";
+import NoteDataSource from "./datasources/note.js";
+
+interface ContextValue {
+  dataSources: {
+    bookAPI: BookAPI;
+    noteAPI: NoteDataSource;
+  };
+}
 
 const createStore = () => {
   const db = new Sequelize({
@@ -15,23 +23,14 @@ const createStore = () => {
     author: types.STRING,
   });
 
-  return { db, books };
+  const notes = db.define("notes", {
+    id: { primaryKey: true, type: types.STRING },
+    title: types.STRING,
+    content: types.STRING,
+  });
+
+  return { db, books, notes };
 };
-
-const store = createStore();
-
-const books = [
-  {
-    id: "1",
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    id: "2",
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -74,6 +73,38 @@ const typeDefs = `#graphql
     updateBook(book: BookUpdateInput): Book
     deleteBook(id: String): String
   }
+
+  type Note {
+    id: String
+    title: String
+    content: String
+  }
+
+  input NoteInput {
+    id: String!
+    title: String!
+    content: String!
+  }
+
+  input NoteUpdateInput {
+    id: String!
+    title: String
+    content: String
+  }
+
+  type Query {
+    notes: [Note]
+  }
+
+  type Query {
+    note(id: ID!): Note
+  }
+
+  type Mutation {
+    note(note: NoteInput): Note
+    updateNote(note: NoteUpdateInput): Note
+    deleteNote(id: String): String
+  }
 `;
 
 // Resolvers define how to fetch the types defined in your schema.
@@ -86,6 +117,14 @@ const resolvers = {
     },
     book: async (parent, { id }, { dataSources }, info) => {
       const res = await dataSources.bookAPI.getBook(id);
+      return res;
+    },
+    notes: async (parent, args, { dataSources }, info) => {
+      const res = await dataSources.noteAPI.getNotes();
+      return res;
+    },
+    note: async (parent, { id }, { dataSources }, info) => {
+      const res = await dataSources.noteAPI.getNote(id);
       return res;
     },
   },
@@ -108,12 +147,30 @@ const resolvers = {
         return "success";
       }
     },
+    note: async (_, { note }, { dataSources }) => {
+      const res = await dataSources.noteAPI.createNote(note);
+      if (res) {
+        return res;
+      }
+    },
+    updateNote: async (_, { note }, { dataSources }) => {
+      const res = await dataSources.noteAPI.updateNote(note);
+      if (res) {
+        return res;
+      }
+    },
+    deleteNote: async (_, { id }, { dataSources }) => {
+      const res = await dataSources.noteAPI.deleteNote(id);
+      if (res) {
+        return "success";
+      }
+    },
   },
 };
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
-const server = new ApolloServer({
+const server = new ApolloServer<ContextValue>({
   typeDefs,
   resolvers,
 });
@@ -124,13 +181,11 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 const { url } = await startStandaloneServer(server, {
   context: async () => {
-    console.log("constructor call 2");
-
     const store = createStore();
-
     return {
       dataSources: {
         bookAPI: new BookAPI({ store }),
+        noteAPI: new NoteDataSource({ store }),
       },
     };
   },

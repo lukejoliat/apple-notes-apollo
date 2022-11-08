@@ -1,6 +1,6 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { Note, QUERY } from "../App";
+import { Note, GET_NOTES, UPDATE_NOTE, DELETE_NOTE } from "../App";
 
 export default function NoteSelected({
   noteSelected,
@@ -8,7 +8,9 @@ export default function NoteSelected({
   noteSelected: string;
 }) {
   const client = useApolloClient();
-  const { loading, error, data } = useQuery<{ notes: Note[] }>(QUERY);
+  const { loading, error, data } = useQuery<{ notes: Note[] }>(GET_NOTES);
+  const [update] = useMutation(UPDATE_NOTE);
+  const [deleteNote] = useMutation(DELETE_NOTE);
   const note = data ? data.notes.find((n) => n.id === noteSelected) : null;
   const [titleValue, setTitleValue] = useState<string | undefined>(
     note ? note.title : ""
@@ -29,11 +31,30 @@ export default function NoteSelected({
         return n;
       });
       client.writeQuery({
-        query: QUERY,
+        query: GET_NOTES,
         data: { notes: newNotes },
       });
     }
   };
+  const handleDelete = () => {
+    deleteNote({
+      refetchQueries: [GET_NOTES],
+      variables: { id: note?.id },
+    });
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      console.log(titleValue);
+      update({
+        refetchQueries: [GET_NOTES],
+        variables: { note: { id: note?.id, title: titleValue } },
+      });
+      // Send Axios request here
+    }, 3000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [titleValue]);
 
   useEffect(() => {
     setTitleValue(note?.title);
@@ -55,6 +76,7 @@ export default function NoteSelected({
             onChange={(e) => handleNoteType(e.target.value, "content")}
           ></textarea>
         </div>
+        <button onClick={handleDelete}>Delete Note</button>
       </div>
     );
 
