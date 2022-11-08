@@ -1,6 +1,6 @@
-import { Note as NoteSchema } from "../App";
+import { Note as NoteSchema } from "./Note";
 
-export default function Note({ note }: { note: NoteSchema }) {
+export default function NoteItem({ note }: { note: NoteSchema }) {
   return (
     <div className="note_item">
       <h3>{note.title}</h3>

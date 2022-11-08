@@ -1,6 +1,7 @@
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { Note, GET_NOTES, UPDATE_NOTE, DELETE_NOTE } from "../App";
+import { GET_NOTES, UPDATE_NOTE, DELETE_NOTE } from "../client";
+import { Note } from "./Note";
 
 export default function NoteSelected({
   noteSelected,
@@ -18,6 +19,7 @@ export default function NoteSelected({
   const [contentValue, setContentValue] = useState<string | undefined>(
     note ? note.content : ""
   );
+
   const handleNoteType = (value: string, field: string) => {
     setTitleValue(value);
     if (note) {
@@ -36,6 +38,7 @@ export default function NoteSelected({
       });
     }
   };
+
   const handleDelete = () => {
     deleteNote({
       refetchQueries: [GET_NOTES],
@@ -45,13 +48,11 @@ export default function NoteSelected({
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      console.log(titleValue);
       update({
         refetchQueries: [GET_NOTES],
         variables: { note: { id: note?.id, title: titleValue } },
       });
-      // Send Axios request here
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [titleValue]);
@@ -60,6 +61,9 @@ export default function NoteSelected({
     setTitleValue(note?.title);
     setContentValue(note?.content);
   }, [note?.id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error.</div>;
 
   if (note)
     return (
@@ -80,5 +84,5 @@ export default function NoteSelected({
       </div>
     );
 
-  return <></>;
+  return <>Note could not be retrieved.</>;
 }

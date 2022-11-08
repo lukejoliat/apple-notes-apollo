@@ -40,7 +40,7 @@ export class NoteDataSource {
     const newNote = {};
     if (title) newNote["title"] = title;
     if (author) newNote["content"] = author;
-    const res = await this.store.notes.update(newNote, {
+    await this.store.notes.update(newNote, {
       where: {
         id,
       },
