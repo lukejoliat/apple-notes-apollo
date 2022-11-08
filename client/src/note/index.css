@@ -1,0 +1,33 @@
+.note_list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    color: var(--primary, black);
+  }
+  
+  .note_item {
+    background: var(--secondary, white);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    max-height: 10rem;
+    overflow: hidden;
+    margin: 1rem 0;
+    cursor: pointer;
+  }
+  
+  .note_selected {
+    text-align: left;
+    color: var(--primary, black);
+    background: var(--secondary, white);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    flex: 1;
+  }
+  
+  .note_title_input,
+  .note_content_input {
+    width: 100%;
+  }
+  

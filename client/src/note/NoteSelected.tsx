@@ -84,5 +84,5 @@ export default function NoteSelected({
       </div>
     );
 
-  return <>Note could not be retrieved.</>;
+  return <div>Note could not be retrieved.</div>;
 }

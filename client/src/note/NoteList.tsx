@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { CREATE_NOTE, GET_NOTES } from "../client";
 import { Note } from "./Note";
 import NoteItem from "./NoteItem";
+import "./index.css";
 
 export default function NoteList({
   handleNoteClick,
@@ -12,9 +13,13 @@ export default function NoteList({
   const { loading, error, data } = useQuery<{ notes: Note[] }>(GET_NOTES);
   const [mutate] = useMutation(CREATE_NOTE);
   const createNote = () => {
+    const id = v4();
     mutate({
       refetchQueries: [GET_NOTES],
-      variables: { note: { id: v4(), title: "", content: "" } },
+      variables: { note: { id, title: "", content: "" } },
+      onCompleted: () => {
+        handleNoteClick(id);
+      },
     });
   };
 
