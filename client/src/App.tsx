@@ -17,7 +17,10 @@ function App() {
       <div className="App">
         <Sidebar>
           <div>Side-Bar</div>
-          <NoteList handleNoteClick={handleNoteClick} />
+          <NoteList
+            noteSelected={noteSelected}
+            handleNoteClick={handleNoteClick}
+          />
         </Sidebar>
         <MainPanel>
           Main Panel

@@ -3,12 +3,15 @@ import { v4 } from "uuid";
 import { CREATE_NOTE, GET_NOTES } from "../client";
 import { Note } from "./Note";
 import NoteItem from "./NoteItem";
+import classNames from "classnames";
 import "./index.css";
 
 export default function NoteList({
   handleNoteClick,
+  noteSelected,
 }: {
   handleNoteClick: (i: string) => void;
+  noteSelected: string;
 }) {
   const { loading, error, data } = useQuery<{ notes: Note[] }>(GET_NOTES);
   const [mutate] = useMutation(CREATE_NOTE);
@@ -33,7 +36,11 @@ export default function NoteList({
       </button>
       <ul className="note_list">
         {data?.notes.map((n, i) => (
-          <li key={n.id} onClick={() => handleNoteClick(n.id)}>
+          <li
+            key={n.id}
+            onClick={() => handleNoteClick(n.id)}
+            className={classNames({ active: n.id === noteSelected })}
+          >
             <NoteItem note={n} />
           </li>
         ))}

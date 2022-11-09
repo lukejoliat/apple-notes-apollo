@@ -19,8 +19,8 @@
   .note_selected {
     padding: .5rem;
     text-align: left;
-    color: var(--primary, black);
-    background: var(--secondary, white);
+    color: var(--secondary, white);
+    background: var(--primary, black);
     padding: 0.5rem;
     border-radius: 0.5rem;
     margin: 1rem 0;
@@ -36,7 +36,6 @@
     background: transparent;
     border: none;
     box-shadow: none;
-    color: black;
     font-size: 2rem;
     margin: 1rem 0;
   }
@@ -45,10 +44,15 @@
     background: transparent;
     border: none;
     box-shadow: none;
-    color: black;
     font-size: 1rem;
   }
 
   .create_note_button {
     margin: 1rem;
+  }
+
+  .note_date {
+    width: 100%;
+    text-align: center;
+    display: block;
   }

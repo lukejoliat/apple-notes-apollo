@@ -2,7 +2,6 @@ import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { GET_NOTES, UPDATE_NOTE, DELETE_NOTE } from "../client";
 import { Note } from "./Note";
-
 export default function NoteSelected({
   noteSelected,
 }: {
@@ -13,11 +12,11 @@ export default function NoteSelected({
   const [update] = useMutation(UPDATE_NOTE);
   const [deleteNote] = useMutation(DELETE_NOTE);
   const note = data ? data.notes.find((n) => n.id === noteSelected) : null;
-  const [titleValue, setTitleValue] = useState<string | undefined>(
-    note ? note.title : ""
+  const [titleValue, setTitleValue] = useState<string>(
+    note && note.title ? note.title : ""
   );
-  const [contentValue, setContentValue] = useState<string | undefined>(
-    note ? note.content : ""
+  const [contentValue, setContentValue] = useState<string>(
+    note && note.content ? note.content : ""
   );
 
   const handleNoteType = (value: string, field: string) => {
@@ -60,20 +59,22 @@ export default function NoteSelected({
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      update({
-        refetchQueries: [GET_NOTES],
-        variables: {
-          note: { id: note?.id, title: titleValue, content: contentValue },
-        },
-      });
+      if (note) {
+        update({
+          refetchQueries: [GET_NOTES],
+          variables: {
+            note: { id: note?.id, title: titleValue, content: contentValue },
+          },
+        });
+      }
     }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [titleValue, contentValue]);
 
   useEffect(() => {
-    setTitleValue(note?.title);
-    setContentValue(note?.content);
+    setTitleValue(note?.title || "");
+    setContentValue(note?.content || "");
   }, [note?.id]);
 
   if (loading) return <div>Loading...</div>;
@@ -82,6 +83,7 @@ export default function NoteSelected({
   if (note)
     return (
       <div className="note_selected">
+        <span className="note_date">November 4, 2022</span>
         <input
           className="note_title_input"
           value={titleValue}

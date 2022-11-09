@@ -1,0 +1,16 @@
+.sidebar {
+    display: flex;
+}
+
+.sidebar_content {
+    flex: 1;
+}
+
+.sidebar_dragger {
+    height: 100%;
+    width: .25rem;
+    margin-left: .5rem;
+    background-color: white;
+    cursor: col-resize;
+    border-radius: 2rem;
+}
