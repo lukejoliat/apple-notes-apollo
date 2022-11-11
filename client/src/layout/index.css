@@ -4,6 +4,7 @@
 
 .sidebar_content {
     flex: 1;
+    width: 400px;
 }
 
 .sidebar_dragger {

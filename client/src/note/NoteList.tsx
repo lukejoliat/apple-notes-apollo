@@ -28,6 +28,15 @@ export default function NoteList({
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error.</div>;
+  if (!data || !data.notes || data.notes.length <= 0)
+    return (
+      <>
+        <button className="create_note_button" onClick={() => createNote()}>
+          Create Note
+        </button>
+        <div>No notes to display.</div>
+      </>
+    );
 
   return (
     <>

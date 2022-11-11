@@ -84,7 +84,7 @@
   }
   
   .main-panel {
-    flex: 1;
+    flex: 2;
     height: 100%;
     border-radius: 0.5rem;
     border: 2px dashed var(--secondary, white);

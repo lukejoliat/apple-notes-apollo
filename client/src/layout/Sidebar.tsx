@@ -16,13 +16,22 @@ export default function Sidebar({ children }: PropsWithChildren) {
     isMouseDown.current = true;
   };
 
+  const convertRemToPixels = (rem: number) => {
+    return (
+      rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
+    );
+  };
+
   const mousemove = (e: MouseEvent) => {
     const { x: mouseX } = e;
     const { x: parentX } = parent.current?.getBoundingClientRect() as DOMRect;
 
     if (isMouseDown.current === true) {
       if (sidebar.current)
-        sidebar.current.style.width = `${mouseX - parentX}px`;
+        sidebar.current.style.width = `${
+          mouseX - parentX - convertRemToPixels(1.25)
+        }px`;
+
       if (hideContent === false && sidebar.current && mouseX - parentX < 50) {
         setHideContent(true);
         if (dragger.current) dragger.current.style.marginLeft = "0";
