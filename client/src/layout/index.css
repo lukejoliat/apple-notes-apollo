@@ -2,15 +2,19 @@
     display: flex;
 }
 
+.sidebar_header {
+    
+}
+
 .sidebar_content {
     flex: 1;
     width: 400px;
+    padding: 1rem;
 }
 
 .sidebar_dragger {
     height: 100%;
     width: .25rem;
-    margin-left: .5rem;
     background-color: white;
     cursor: col-resize;
     border-radius: 2rem;

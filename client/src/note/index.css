@@ -7,9 +7,8 @@
   }
   
   .note_item {
-    background: var(--secondary, white);
+    color: white;
     padding: 0.5rem;
-    border-radius: 0.5rem;
     max-height: 10rem;
     overflow: hidden;
     margin: 1rem 0;
@@ -17,13 +16,11 @@
   }
   
   .note_selected {
-    padding: .5rem;
     text-align: left;
     color: var(--secondary, white);
     background: var(--primary, black);
     padding: 0.5rem;
     border-radius: 0.5rem;
-    margin: 1rem 0;
     flex: 1;
   }
   
@@ -55,4 +52,9 @@
     width: 100%;
     text-align: center;
     display: block;
+  }
+
+  .note_list li.active {
+    border-radius: 0.5rem;
+    background: rgb(140, 109, 35);
   }

@@ -2,6 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import { useState } from "react";
 import "./App.css";
 import { client } from "./client";
+import Header from "./layout/Header";
 import MainPanel from "./layout/MainPanel";
 import Sidebar from "./layout/Sidebar";
 import NoteList from "./note/NoteList";
@@ -15,17 +16,18 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <Sidebar>
-          <div>Side-Bar</div>
-          <NoteList
-            noteSelected={noteSelected}
-            handleNoteClick={handleNoteClick}
-          />
-        </Sidebar>
-        <MainPanel>
-          Main Panel
-          <NoteSelected noteSelected={noteSelected} />
-        </MainPanel>
+        {/* <Header /> */}
+        <div className="main_content">
+          <Sidebar>
+            <NoteList
+              noteSelected={noteSelected}
+              handleNoteClick={handleNoteClick}
+            />
+          </Sidebar>
+          <MainPanel>
+            <NoteSelected noteSelected={noteSelected} />
+          </MainPanel>
+        </div>
       </div>
     </ApolloProvider>
   );

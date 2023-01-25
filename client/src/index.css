@@ -79,25 +79,41 @@
   }
   
   .App {
-    display: flex;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .main_content {
+    display: flex;
+    flex: 1;
+    /* height: 100%; */
   }
   
   .main-panel {
     flex: 2;
     height: 100%;
     border-radius: 0.5rem;
-    border: 2px dashed var(--secondary, white);
-    padding: 0.5rem;
+    /* border: 2px dashed var(--secondary, white); */
     display: flex;
     flex-direction: column;
+  }
+
+  .main-panel > * {
+    padding: 2rem;
   }
   
   .sidebar {
     height: 100%;
     overflow: hidden;
     border-radius: 0.5rem;
-    border: 2px dashed var(--secondary, white);
-    padding: 0.5rem;
+    /* border: 2px dashed var(--secondary, white); */
+    /* padding: 0.5rem; */
   }
   

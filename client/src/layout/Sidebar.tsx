@@ -1,58 +1,24 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { useResize } from "./hooks/use-resize";
 import "./index.css";
-
+import { v4 } from "uuid";
+import { ReactComponent as NoteEdit } from "../note-edit.svg";
+import { useMutation } from "@apollo/client";
+import { CREATE_NOTE, GET_NOTES } from "../client";
 export default function Sidebar({ children }: PropsWithChildren) {
-  const parent = useRef<HTMLDivElement>(null);
-  const sidebar = useRef<HTMLDivElement>(null);
-  const dragger = useRef<HTMLDivElement>(null);
-  const isMouseDown = useRef<boolean>(false);
-  const [hideContent, setHideContent] = useState(false);
+  const { parent, dragger, sidebar, hideContent } = useResize();
+  const [mutate] = useMutation(CREATE_NOTE);
 
-  const mouseup = () => {
-    isMouseDown.current = false;
+  const createNote = () => {
+    const id = v4();
+    mutate({
+      refetchQueries: [GET_NOTES],
+      variables: { note: { id, title: "", content: "" } },
+      // onCompleted: () => {
+      //   handleNoteClick(id);
+      // },
+    });
   };
-
-  const mousedown = () => {
-    isMouseDown.current = true;
-  };
-
-  const convertRemToPixels = (rem: number) => {
-    return (
-      rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
-    );
-  };
-
-  const mousemove = (e: MouseEvent) => {
-    const { x: mouseX } = e;
-    const { x: parentX } = parent.current?.getBoundingClientRect() as DOMRect;
-
-    if (isMouseDown.current === true) {
-      if (sidebar.current)
-        sidebar.current.style.width = `${
-          mouseX - parentX - convertRemToPixels(1.25)
-        }px`;
-
-      if (hideContent === false && sidebar.current && mouseX - parentX < 50) {
-        setHideContent(true);
-        if (dragger.current) dragger.current.style.marginLeft = "0";
-      } else if (hideContent === true && mouseX - parentX > 55) {
-        setHideContent(false);
-        if (dragger.current) dragger.current.style.marginLeft = ".5rem";
-      }
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mouseup", mouseup);
-    dragger.current?.addEventListener("mousedown", mousedown);
-    document.addEventListener("mousemove", mousemove);
-
-    return () => {
-      document.removeEventListener("mouseup", mouseup);
-      dragger.current?.removeEventListener("mousedown", mousedown);
-      document.removeEventListener("mousemove", mousemove);
-    };
-  }, [hideContent]);
 
   return (
     <div className="sidebar" ref={parent}>
@@ -61,6 +27,9 @@ export default function Sidebar({ children }: PropsWithChildren) {
         ref={sidebar}
         style={{ display: hideContent ? "none" : "block" }}
       >
+        <div className="sidebar_header">
+          <NoteEdit fill={"white"} onClick={createNote} />
+        </div>
         {children}
       </div>
       <div className="sidebar_dragger" ref={dragger} />
